@@ -1,4 +1,5 @@
-const { REST, Routes } = require('discord.js');
+const { REST, Client, GatewayIntentBits } = require('discord.js');
+const { TOKEN } = require('./config.json');
 
 const commands = [
     {
@@ -7,16 +8,28 @@ const commands = [
     }
 ];
 
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+
 const rest = new REST({ version: '10' }).setToken('token');
 
-(async () = {
-    try {
-        console.log('Started refreshing application (/) commands.');
+client.once('ready', () => {
+    console.log('Ready!');
+});
 
-        await rest.put(Routes.applicationCommands(CLIENT_ID), { body: comamnds });
+client.on('interactionCreate', async interaction => {
+    if (!interaction.isChatInputCommand()) return;
+    
+    console.log(interaction.guild);
 
-        console.log('Successfully reloaded application (/) commands');
-    } catch (error) {
-        console.error(error);
+    const { commandName } = interaction;
+
+    if (commandName === 'ping') {
+        await interaction.reply('Pong!');
+    } else if (commandName === 'server') {
+        await interaction.reply(`Server name: ${interaction.guild.name}\nMember count: ${interaction.guild.memberCount}`);
+    } else if (commandName === 'user') {
+        await interaction.reply('User info here');
     }
-})();
+});
+
+client.login(TOKEN);
