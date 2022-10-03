@@ -57,7 +57,7 @@ const formatScore = () => {
 const handleButtonPress = (interaction, message, content, row) => {
     const filter = i => !respondedUsers.includes(i.user.id);
 
-    const collector = message.createMessageComponentCollector({ filter, time: 15000 });
+    const collector = message.createMessageComponentCollector({ filter, time: 90000 });
 
     collector.on('collect', async i => {
         respondedUsers.push(i.user.id);
